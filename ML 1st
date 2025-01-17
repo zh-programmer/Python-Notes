@@ -1,0 +1,278 @@
+5.2.3 Getting started with your python environment
+
+
+You can use your favorite python IDE for your machine learning project. However it’s important to note that Google Colab is increasingly popular among ML enthusiasts, mainly because it provides a hassle free rapid start. It is a Jupyter notebook-like programming environment with a large number of standard libraries preinstalled. It also allows you to run your code either on your local machine or in the cloud, allowing you to leverage GPU based computation for better performance for some algorithms.
+
+https://colab.research.google.com
+
+Once you open your editor, you can start your python script with the necessary packages imported. The following code block shows some of the typical python libraries used for data handling, plotting and visualization
+
+import numpy as np
+import pandas as pd
+import seaborn as sns
+sns.set_palette('husl')
+import matplotlib.pyplot as plt
+% matplotlib inline
+
+Let’s look at some of the above libraries in a bit more detail
+
+    NumPy offers comprehensive mathematical functions, random number generators, linear algebra routines etc. It is one of the fundamental scientific libraries.
+    Pandas is a fast, powerful, flexible and easy to use library for data analysis and manipulation.
+    Matplotlib is a comprehensive library for creating static, animated and interactive visualizations.
+    Seaborn is a data visualization library based on matplotlib. It provides a high-level interface for drawing attractive and informative statistical graphics.
+
+The command %matplotlib inline allows the plots to be visualized directly inside the python notebook you are coding on.
+
+Apart from the above, we will also be using Scikit-learn, which is a comprehensive machine learning library that includes implementations of several machine learning algorithms and support functions for training and evaluating machine learning models.
+5.2.4 Exploring the data
+
+
+Let’s get our hands on the dataset and see what’s in there! 
+
+
+Load the data
+The following code can be used to download the data and load it into a data structure called a DataFrame defined in
+
+url='https://raw.githubusercontent.com/jbrownlee/Datasets/master/iris.csv' 
+col_name = ['sepal-length','sepal-width','petal-length','petal-width','class']
+dataset = pd.read_csv(url,names = col_name)
+
+Pandas. provides a function called head() to print the top five rows of the dataset.print(dataset.shape)
+
+dataset.shape
+
+
+If you execute this on Google Colab or any other notebook such as Jupyter notebooks this is how the output should look
+
+Looking at the top five rows of the dataset
+
+Pandas provides a function called head() to print the top five rows of the dataset.
+
+dataset.head()
+
+If you execute this on Google Colab or any other notebook such as Jupyter notebooks this is how the output should look
+
+Now try this code on the following trinket and see the ouput. Note that we are using a print() to display the output on trinket and you do not need to do that if you were using a notebook
+
+
+
+
+//
+
+
+
+# IMPORTING LIBRARIES
+import numpy as np
+import pandas as pd
+import seaborn as sns
+sns.set_palette('husl')
+import matplotlib.pyplot as plt
+# % matplotlib inline
+
+# LOAD THE DATA
+url='https://raw.githubusercontent.com/jbrownlee/Datasets/master/iris.csv'
+col_name = ['sepal-length','sepal-width','petal-length','petal-width','class']
+dataset = pd.read_csv(url,names = col_name)
+
+# EXPLORE DATA
+print('Dataset Size')
+print(dataset.shape)
+print('First Five Rows of the Dataset')
+print(dataset.head())
+
+
+
+//
+
+
+
+
+Look at some summary statistics of the dataset
+
+
+Pandas provides a function called describe() to compute and print out summary statistics for each class, such as the number of data points, mean value, standard deviation, minimum value, maximum value and the quartiles.
+
+dataset.describe()
+
+If you execute this on Google Colab or any other notebook such as Jupyter notebooks this is how the output should look
+
+See what data types we are dealing with, and the memory usage of the dataset
+
+
+Pandas provides a function called info() that prints out the data type of each column andthe memory usage.
+
+dataset.info()
+
+If you execute this on Google Colab or any other notebook such as Jupyter notebooks this is how the output should look
+
+The number of classes and the number of examples
+
+
+Pandas provides a function called value_counts() to show us the number of examples in each class.
+
+The value_counts() functions should be called on the column that contains the class labels. That is obtained by dataset[‘class’], on which the value_counts() function should be called.
+
+dataset['class'].value_counts()
+
+If you execute this on Google Colab or any other notebook such as Jupyter notebooks this is how the output should look
+
+Now try this code on the following trinket and see the ouput. Note that we are using a print() to display the output on trinket and you do not need to do that if you were using a notebook
+
+
+
+
+//
+
+
+
+# IMPORTING LIBRARIES
+import numpy as np
+import pandas as pd
+import seaborn as sns
+sns.set_palette('husl')
+import matplotlib.pyplot as plt
+# % matplotlib inline
+
+# LOAD THE DATA
+url='https://raw.githubusercontent.com/jbrownlee/Datasets/master/iris.csv'
+col_name = ['sepal-length','sepal-width','petal-length','petal-width','class']
+dataset = pd.read_csv(url,names = col_name)
+
+# EXPLORE DATA
+# print('Dataset Size')
+# print(dataset.shape)
+# print('First Five Rows of the Dataset')
+# print(dataset.head())
+
+print('Summary Statistics of the Dataset')
+print(dataset.describe())
+
+print('Data Types and Memmory Usage')
+print(dataset.info())
+
+print('classes and the number of examples')
+print(dataset['class'].value_counts())
+
+
+
+
+
+//
+
+
+
+
+
+
+Violin Plots
+Sometimes, the summary statistics such as mean, standard deviation and median are not enough to understand a dataset. Are the values clustered around the median? Are they spread out normally or skewed to one side? A violin plot can help you to answer these questions. This can show you peaks of the data and visualizes the distribution of the dataset.
+The best way to understand what a violin plot shows is to try it out on our dataset.
+
+# Violin Plot
+sns.violinplot(y='class', x='sepal-lenght', data=dataset, inner='quartile')
+plt.show()
+sns.violinplot(y='class', x='sepal-width', data=dataset, inner='quartile')
+plt.show()
+sns.violinplot(y='class', x='petal-lenght', data=dataset, inner='quartile')
+plt.show()
+sns.violinplot(y='class', x='petal-width', data=dataset, inner='quartile')
+plt.show()
+
+If you execute this on Google Colab or any other notebook such as Jupyter notebooks this is how the output should look
+
+Let’s focus on the top right violin plot that shows the distributions of the attribute “petal length”. We can observe that for Iris Setosa, the petal length is distributed between 1 cm and 2 cm with a larger proportion of the flowers having a measurement near the median value. The other two types of Iris have a flatter and longer distributions of petal length with Iris Virginica having the longest distribution with a long thin tail.
+
+Correlation Heatmap
+Correlation between two attributes tells you about the interdependency between the two attributes. A correlation heatmap shows a 2D visualization of such interdependencies between each pair of attributes. Whether two attributes are highly correlated or not is reflected by the colors of the heatmap. The following code block can be used to plot the correlation heatmap for our dataset.
+
+# Pair Plot
+sns.pairplot(dataset, hue='class', markers='+')
+plt.show()
+
+If you execute this on Google Colab or any other notebook such as Jupyter notebooks this is how the output should look
+
+Now try this code on the following trinket and see the ouput. You can try to write the code to generate the other violin plots and execute to explore the data.
+
+
+
+
+
+//
+
+
+
+
+# IMPORTING LIBRARIES
+import numpy as np
+import pandas as pd
+import seaborn as sns
+sns.set_palette('husl')
+import matplotlib.pyplot as plt
+# % matplotlib inline
+
+# LOAD THE DATA
+url='https://raw.githubusercontent.com/jbrownlee/Datasets/master/iris.csv'
+col_name = ['sepal-length','sepal-width','petal-length','petal-width','class']
+dataset = pd.read_csv(url,names = col_name)
+
+# Violin Plot
+sns.violinplot(y='class', x='sepal-length', data=dataset, inner='quartile')
+plt.show()
+
+# Pair Plot
+sns.pairplot(dataset, hue='class', markers='+')
+plt.show()
+
+
+
+
+
+//
+
+
+
+
+
+
+
+Correlation Heatmap
+
+In the first line we specify the size of the figure, in inches. In this case the width is 7 inches and the height is 5 inches. Then we call the heatmap function of Seaborn, to which we pass the correlation matrix of the attributes of the dataset. The calculation of the correlation matrix is achieved by calling the corr() function on the dataset. The cmap variable sets the type of color map we would like to see on the heatmap. Here we have specified cmap=’cubehelix_r’. Have a look at the documentation of the Seaborn library to find out the other kinds of color maps that are available for producing a colorful correlation heatmap.
+
+# Correlation Heatmap
+plt.figure(figsize=(7,5))
+sns.heatmap(dataset.corr(), annot=True, cmap='jet')
+plt.show()
+
+Now try this code on the following trinket and see the ouput. 
+
+
+
+
+//
+
+
+
+
+# IMPORTING LIBRARIES
+import numpy as np
+import pandas as pd
+import seaborn as sns
+sns.set_palette('husl')
+import matplotlib.pyplot as plt
+# % matplotlib inline
+
+# LOAD THE DATA
+url='https://raw.githubusercontent.com/jbrownlee/Datasets/master/iris.csv'
+col_name = ['sepal-length','sepal-width','petal-length','petal-width','class']
+dataset = pd.read_csv(url,names = col_name)
+
+# Correlation Heatmap
+plt.figure(figsize=(7,5))
+sns.heatmap(dataset.corr(), annot=True, cmap='jet')
+plt.show()
+
+
+
+
+//

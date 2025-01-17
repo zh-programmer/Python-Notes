@@ -1,0 +1,151 @@
+Web Scraping in Python
+Introduction
+
+Extracting specific content from a webpage is called 'Web Scraping". Web pages could be quite complicated to read and understand in its HTML format.
+To understand a structure of the web page, we can use a tool such as web browser's inspect tool.
+
+In Firefox or Chrome Browsers, you can right click on any item of interest, and choose Inspect (Right Click + Q). The item will be highlighted in the page, and the source code related to the selected item will be highlighted in a source-code view, (DOM and Style Inspector: Ctrl+Shift+C). You can identify the related tags, class or ID related to the interested item by observing the corresponding source code.
+BeautifulSoup4
+
+To navigate and search the HTML document using python, a library known as BeautifulSoup can be used. You can read about the library and its functions here.
+
+https://www.crummy.com/software/BeautifulSoup/bs4/doc/
+
+Beautiful library takes in an HTML web bage, and provide us python methods to navigate and access the individual tags within it.
+
+Let us try some example uses:
+
+
+
+
+//
+
+
+
+
+html_doc = """<html><head><title>The Dormouse's story</title></head>
+<body>
+<p class="title"><b>The Dormouse's story</b></p>
+
+<p class="story">Once upon a time there were three little sisters; and their names were
+<a href="http://example.com/elsie" class="sister" id="link1">Elsie</a>,
+<a href="http://example.com/lacie" class="sister" id="link2">Lacie</a> and
+<a href="http://example.com/tillie" class="sister" id="link3">Tillie</a>;
+and they lived at the bottom of a well.</p>
+
+<p class="story">...</p>
+"""
+
+from bs4 import BeautifulSoup
+soup = BeautifulSoup(html_doc, 'html.parser')
+
+#The BeautifulSoup object, represents the document as a nested data structure.
+#prettify method print it in a way which is easy to read.
+#print(soup.prettify())
+
+#Here are some ways to navigate the data structure
+
+
+print(soup.title)
+# <title>The Dormouse's story</title>
+
+print(soup.title.name)
+# u'title'
+
+print(soup.title.string)
+# u'The Dormouse's story'
+
+print(soup.title.parent.name)
+# u'head'
+
+print(soup.p)
+# <p class="title"><b>The Dormouse's story</b></p>
+
+print(soup.p['class'])
+# u'title'
+
+print(soup.a)
+# <a class="sister" href="http://example.com/elsie" id="link1">Elsie</a>
+
+links = soup.find_all('a')
+# [<a class="sister" href="http://example.com/elsie" id="link1">Elsie</a>,
+#  <a class="sister" href="http://example.com/lacie" id="link2">Lacie</a>,
+#  <a class="sister" href="http://example.com/tillie" id="link3">Tillie</a>]
+for link in links:
+  print(link)
+  
+print(soup.find(id="link3"))
+# <a class="sister" href="http://example.com/tillie" id="link3">Tillie</a>
+
+#Lets try to get siblings of the p tag
+children = soup.p.parent.children
+for child in children:
+  print('Child:',child)
+  
+#or you can go sideways
+print('Sibling:',soup.p.next_sibling.next_sibling)
+
+#For many other methods, please visit:
+#https://www.crummy.com/software/BeautifulSoup/bs4/doc/
+
+
+
+
+//
+
+
+
+
+There are many more techniques which you can use to locate any specific content easily.
+Exercise : Extract the topic and the link of the Google search results
+
+As an exercise , let us try to extract only the search results topic and the link from a google search results web page.
+
+First, you have to open the specific web page in the web browser and use the Inspect tool to study the structure of the page, specially around the item of interest.
+
+We are using the following link, which will produce the Google search results for the term "Sri+Lanka"
+
+https://www.google.com/search?q=Sri+Lanka
+
+After inspecting the web page html source in the browser, we figured-out the titles of search results are in h3 tags, and only the titles use the h3 tags in entire page. Because of this, we can ask the beautiful soup for the h3 tags, if we need all the titles.
+Since the related link must also be quite close to the title, we decide to check the other siblings of the title. You can iteratively check for a id, class, or a numbered order of the specific child to isolated the necessary data.
+
+
+In the following trinket, you can try this for yourself.
+
+
+
+
+
+//
+
+
+
+
+import requests
+from bs4 import BeautifulSoup
+
+url = 'https://www.google.com/search?q=Sri+Lanka'
+html = requests.get(url).content
+soup = BeautifulSoup(html, 'html.parser')
+
+#Just all the anchors
+#anchors = soup('a')
+#for an in anchors:
+#    print(an.get('href'))
+
+#Just all the headings    
+headings = soup('h3')
+for heading in headings:
+    print(heading.find('div').text)
+    #print(heading.parent)
+    print(heading.parent.get('href'))
+    print("\n")
+    
+#This only retrieve the results from the first page of search results.
+#Can you get the results from the second page as well? What is the GET parameter you need to include to get the rest of the search results?
+
+
+
+
+//
